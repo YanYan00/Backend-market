@@ -1,3 +1,4 @@
+require('dotenv').config();
 const {obtenerProductos, obtenerPerfil, obtenerCategorias} = require('./controllers/itemsControllers.js')
 const express = require('express')
 const app = express()
@@ -6,9 +7,11 @@ const {login, register,actualizarPerfil} = require('./controllers/authController
 const {verificarCredencialesMiddleware} = require('./middlewares/middlewares.js')
 app.use(cors())
 app.use(express.json())
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000,console.log('Servidor encendido en puerto 3000'))
-
+app.listen(PORT, () => {
+    console.log(`Servidor encendido en puerto ${PORT}`);
+});
 app.get('/api/productos', async (req, res) => {
     await obtenerProductos(req, res);
 });
