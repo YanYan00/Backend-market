@@ -13,8 +13,14 @@ const obtenerPerfilDB = async (id) => {
     const { rows, rowCount } = await pool.query(consulta, [id]);
     return rows[0];
 }
+const obtenerPublicacionesDB = async (id) =>{
+    const consulta = "SELECT * FROM Publicaiones where idUsuario =$1"
+    const {rows,rowCount} =await pool.query(consulta,[id]);
+    return rows;
+}
 module.exports ={
     obtenerProductosDB,
     obtenerPerfilDB,
-    obtenerCategoriasDB
+    obtenerCategoriasDB,
+    obtenerPublicacionesDB
 };

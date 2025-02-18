@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {obtenerProductos, obtenerPerfil, obtenerCategorias} = require('./controllers/itemsControllers.js')
+const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones} = require('./controllers/itemsControllers.js')
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -20,6 +20,9 @@ app.get('/api/categorias',async(req,res)=>{
 });
 app.get('/api/profile/:id', async (req,res) =>{
     await obtenerPerfil(req,res);
+})
+app.get('/api/publicaciones/:id',async (req,res)=>{
+    await obtenerPublicaciones(req,res);
 })
 app.post('/api/login',verificarCredencialesMiddleware,async(req,res) =>{
     await login(req,res);

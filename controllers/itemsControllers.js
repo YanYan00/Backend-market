@@ -1,4 +1,4 @@
-const { obtenerProductosDB, obtenerPerfilDB, obtenerCategoriasDB } = require("../models/itemsModels");
+const { obtenerProductosDB, obtenerPerfilDB, obtenerCategoriasDB , obtenerPublicacionesDB} = require("../models/itemsModels");
 
 const obtenerProductos = async (req, res) => {
     try {
@@ -26,8 +26,19 @@ const obtenerPerfil = async (req,res) => {
         console.error("Error:",error)
     }
 }
+const obtenerPublicaciones = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const publicaciones = await obtenerPublicacionesDB(id);
+        res.status(200).json(publicaciones);
+    } catch (error) {
+        console.error("Error:",error)
+        res.status(500).json({error:error.message});
+    }
+}
 module.exports = {
     obtenerProductos,
     obtenerPerfil,
-    obtenerCategorias
+    obtenerCategorias,
+    obtenerPublicaciones
 };
