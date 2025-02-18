@@ -21,9 +21,10 @@ app.get('/api/categorias',async(req,res)=>{
 app.get('/api/profile/:id', async (req,res) =>{
     await obtenerPerfil(req,res);
 })
-app.get('/api/posts/:id',async (req,res)=>{
-    await obtenerPublicaciones(req,res);
-})
+app.get('/api/publicaciones/:id', async (req, res) => {
+    console.log('Petición recibida para id:', req.params.id);
+    await obtenerPublicaciones(req, res);
+});
 app.post('/api/login',verificarCredencialesMiddleware,async(req,res) =>{
     await login(req,res);
 });

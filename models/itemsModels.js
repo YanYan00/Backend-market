@@ -13,10 +13,19 @@ const obtenerPerfilDB = async (id) => {
     const { rows, rowCount } = await pool.query(consulta, [id]);
     return rows[0];
 }
-const obtenerPublicacionesDB = async (id) =>{
-    const consulta = "SELECT * FROM Publicaiones where idUsuario =$1"
-    const {rows,rowCount} =await pool.query(consulta,[id]);
-    return rows;
+const obtenerPublicacionesDB = async (id) => {
+    try {
+        const consulta = "SELECT * FROM Publicaciones WHERE idUsuario = $1";
+        console.log('Ejecutando consulta con id:', id);
+        
+        const { rows } = await pool.query(consulta, [id]);
+        console.log('Resultado:', rows);
+        
+        return rows;
+    } catch (error) {
+        console.error('Error en BD:', error);
+        throw error;
+    }
 }
 module.exports ={
     obtenerProductosDB,

@@ -26,14 +26,21 @@ const obtenerPerfil = async (req,res) => {
         console.error("Error:",error)
     }
 }
-const obtenerPublicaciones = async (req,res) =>{
+const obtenerPublicaciones = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
+        console.log('ID recibido:', id);
+        
         const publicaciones = await obtenerPublicacionesDB(id);
+        console.log('Publicaciones encontradas:', publicaciones);
+        
         res.status(200).json(publicaciones);
     } catch (error) {
-        console.error("Error:",error)
-        res.status(500).json({error:error.message});
+        console.error("Error completo:", error);
+        res.status(500).json({ 
+            error: error.message,
+            details: error.stack 
+        });
     }
 }
 module.exports = {
