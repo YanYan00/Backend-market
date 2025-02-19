@@ -1,7 +1,7 @@
 const pool =require("../bd/server.js")
 
 const obtenerProductosDB = async () => {
-    const {rows} = await pool.query('SELECT  p.idProducto, p.sku, p.descripcion, p.precio, p.stock, p.nombre,  p.fechaCrea, c.nombre AS categoria FROM  Productos p JOIN Categorias c ON p.idCategoria = c.idCategoria' );
+    const {rows} = await pool.query('SELECT  p.idProducto, p.descripcion, p.precio, p.stock, p.nombre,  p.fechaCrea, c.nombre AS categoria FROM  Productos p JOIN Categorias c ON p.idCategoria = c.idCategoria' );
     return rows;
 }
 const obtenerCategoriasDB = async () =>{
@@ -22,13 +22,18 @@ const obtenerPublicacionesDB = async (id) => {
         throw error;
     }
 }
-const agregarProductoDB =async (data) => {
-    const {descripcion,precio,stock,nombre,idCategoria} = data;
-    const consulta = "INSERT INTO Productos (descripcion,precio,stock,nombre,idCategoria) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *"
-    const values = [descripcion,precio,stock,nombre,idCategoria];
-    const result = await pool.query(consulta,values);
-    return result.rows[0];
-}
+const agregarProductoDB = async (data) => {
+    try {
+        const { nombre, descripcion, precio, stock, idCategoria } = data;
+        const consulta = 'INSERT INTO Productos (nombre, descripcion, precio, stock, idCategoria) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+        const values = [nombre, descripcion, precio, stock, idCategoria];
+        const result = await pool.query(consulta, values);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error en BD:', error);
+        throw error;
+    }
+};
 const agregarPublicacionDB = async (data) => {
     try{
         const {titulo,descripcion,precio,idUsuario,idCategoria,idProducto} = data;

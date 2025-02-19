@@ -38,15 +38,18 @@ const obtenerPublicaciones = async (req, res) => {
         });
     }
 }
-const agregarProducto = async (req,res) =>{
+const agregarProducto = async(req, res) => {
     try {
         const productoData = req.body;
+        console.log('Datos recibidos:', productoData);
+        
         const producto = await agregarProductoDB(productoData);
         res.status(201).json(producto);
     } catch (error) {
-        res.status(500).json({error: error.message})
+        console.error('Error al crear producto:', error);
+        res.status(500).json({ error: error.message });
     }
-}
+};
 const agregarPublicacion = async(req,res) =>{
     try {
         const publicaconData = req.body; 
