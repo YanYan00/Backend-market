@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones} = require('./controllers/itemsControllers.js')
+const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion} = require('./controllers/itemsControllers.js')
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -22,15 +22,20 @@ app.get('/api/profile/:id', async (req,res) =>{
     await obtenerPerfil(req,res);
 })
 app.get('/api/posts/:id', async (req, res) => {
-    console.log('Petición recibida para id:', req.params.id);
     await obtenerPublicaciones(req, res);
 });
 app.post('/api/login',verificarCredencialesMiddleware,async(req,res) =>{
     await login(req,res);
 });
 app.post('/api/register',async(req,res)=>{
-    await register(req,res)
+    await register(req,res);
+})
+app.post('/api/productos',async(req,res)=>{
+    await agregarProducto(req,res);
+})
+app.post('/api/posts',async(req,res)=>{
+    await agregarPublicacion(req,res);
 })
 app.put('/api/profile/:id', async(req,res)=>{
-    await actualizarPerfil(req,res)
+    await actualizarPerfil(req,res);
 })

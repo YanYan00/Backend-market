@@ -16,14 +16,29 @@ const obtenerPerfilDB = async (id) => {
 const obtenerPublicacionesDB = async (id) => {
     try {
         const consulta = "SELECT * FROM Publicaciones WHERE idUsuario = $1";
-        console.log('Ejecutando consulta con id:', id);
-        
         const { rows } = await pool.query(consulta, [id]);
-        console.log('Resultado:', rows);
-        
         return rows;
     } catch (error) {
-        console.error('Error en BD:', error);
+        throw error;
+    }
+}
+const agregarProductoDB =async (data) => {
+    const {descripcion,precio,stock,nombre,idCategoria} = data;
+    const consulta = "INSERT INTO Productos (descripcion,precio,stock,nombre,idCategoria) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *"
+    const values = [descripcion,precio,stock,nombre,idCategoria];
+    const result = await pool.query(consulta,values);
+    return result.rows[0];
+}
+const agregarPublicacionDB = async (data) => {
+    try{
+        const {titulo,descripcion,precio,idUsuario,idCategoria,idProducto} = data;
+        const consulta = "INSERT INTO Publicaciones (titulo,descripcion,precio,idUsuario,idCategoria,idProducto) VALUES (DEFAULT, $1,$2,$3,$4,$5,$6) RETURNING *"
+        const values = [titulo,descripcion,precio,idUsuario,idCategoria,idProducto];   
+        const result = await pool.query(consulta,values);
+        return result.rows[0];
+    }
+    catch(error){
+        console.error("Error en bd:",error);
         throw error;
     }
 }
@@ -31,5 +46,7 @@ module.exports ={
     obtenerProductosDB,
     obtenerPerfilDB,
     obtenerCategoriasDB,
-    obtenerPublicacionesDB
+    obtenerPublicacionesDB,
+    agregarPublicacionDB,
+    agregarProductoDB
 };
