@@ -37,7 +37,7 @@ const agregarProductoDB = async (data) => {
 const agregarPublicacionDB = async (data) => {
     try{
         const {titulo,descripcion,precio,idUsuario,idCategoria,idProducto} = data;
-        const consulta = "INSERT INTO Publicaciones (titulo,descripcion,precio,idUsuario,idCategoria,idProducto) VALUES (DEFAULT, $1,$2,$3,$4,$5,$6) RETURNING *"
+        const consulta = "INSERT INTO Publicaciones (titulo,descripcion,precio,idUsuario,idCategoria,idProducto) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *"
         const values = [titulo,descripcion,precio,idUsuario,idCategoria,idProducto];   
         const result = await pool.query(consulta,values);
         return result.rows[0];
