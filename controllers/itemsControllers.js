@@ -29,10 +29,13 @@ const obtenerPerfil = async (req,res) => {
 const obtenerProducto = async(req,res) =>{
     try {
         const {idProducto} = req.params;
-        const publicacion = await obtenerProductoDB(idProducto)
-        res.status(200).json(publicacion);
+        const producto = await obtenerProductoDB(idProducto)
+        if (!producto) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.status(200).json(producto);
     } catch (error) {
-        console.error("Error:", error);
+        res.status(500).json({ error: error.message });
     }
 }
 const obtenerPublicaciones = async (req, res) => {

@@ -15,7 +15,7 @@ app.listen(PORT, () => {
 app.get('/api/productos', async (req, res) => {
     await obtenerProductos(req, res);
 });
-app.get('/api/productos', async (req,res) =>{
+app.get('/api/productos/:id', async (req,res) =>{
     await obtenerProducto(req,res);
 })
 app.get('/api/categorias',async(req,res)=>{
