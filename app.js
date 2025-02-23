@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion} = require('./controllers/itemsControllers.js')
+const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion, obtenerProducto} = require('./controllers/itemsControllers.js')
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -15,6 +15,9 @@ app.listen(PORT, () => {
 app.get('/api/productos', async (req, res) => {
     await obtenerProductos(req, res);
 });
+app.get('/api/productos', async (req,res) =>{
+    await obtenerProducto(req,res);
+})
 app.get('/api/categorias',async(req,res)=>{
     await obtenerCategorias(req,res);
 });
