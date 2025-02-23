@@ -13,10 +13,10 @@ const obtenerPerfilDB = async (id) => {
     const { rows, rowCount } = await pool.query(consulta, [id]);
     return rows[0];
 }
-const obtenerProductoDB = async(idProducto) =>{
+const obtenerProductoDB = async(id) =>{
     try {
         const consulta = "SELECT * FROM Productos WHERE idProducto = $1";
-        const {rows} = await pool.query(consulta,[idProducto])
+        const {rows} = await pool.query(consulta,[id])
         return rows[0];
     } catch (error) {
         throw error;

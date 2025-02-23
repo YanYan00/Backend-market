@@ -28,8 +28,8 @@ const obtenerPerfil = async (req,res) => {
 }
 const obtenerProducto = async(req,res) =>{
     try {
-        const {idProducto} = req.params;
-        const producto = await obtenerProductoDB(idProducto)
+        const {id} = req.params;
+        const producto = await obtenerProductoDB(id)
         if (!producto) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
