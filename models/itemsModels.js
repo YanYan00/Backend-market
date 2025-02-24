@@ -80,7 +80,7 @@ const editarPublicacionDB = async (id,data) =>{
 }
 const eliminarProductoDB = async(id) =>{
     try {
-        const consulta = "DELETE FROM Productos WHERE idProducto = $1";
+        const consulta = "DELETE FROM Productos WHERE idProducto = $1 RETURNING *";
         const result = await pool.query(consulta,[id]);
         return result.rows[0];
     } catch (error) {
@@ -89,7 +89,7 @@ const eliminarProductoDB = async(id) =>{
 }
 const eliminarPublicacionDB = async(id) =>{
     try {
-        const consulta = "DELETE FROM Publicaciones WHERE idPublicacion = $1";
+        const consulta = "DELETE FROM Publicaciones WHERE idPublicacion = $1 RETURNING *";
         const result = await pool.query(consulta,[id]);
         return result.rows[0];
     } catch (error) {
