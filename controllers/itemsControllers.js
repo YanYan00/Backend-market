@@ -1,4 +1,4 @@
-const { obtenerProductosDB, obtenerPerfilDB, obtenerCategoriasDB,obtenerProductoDB , obtenerPublicacionesDB,agregarPublicacionDB,agregarProductoDB,editarProductoDB,editarPublicacionDB} = require("../models/itemsModels");
+const { obtenerProductosDB, obtenerPerfilDB, obtenerCategoriasDB,obtenerProductoDB , obtenerPublicacionesDB,agregarPublicacionDB,agregarProductoDB,editarProductoDB,editarPublicacionDB, eliminarProductoDB, eliminarPublicacionDB} = require("../models/itemsModels");
 
 const obtenerProductos = async (req, res) => {
     try {
@@ -89,7 +89,25 @@ const editarPublicacion = async(req,res) =>{
         const publicacion = await editarPublicacionDB(id,publicacionData);
         res.status(200).json(publicacion);
     } catch (error) {
-        res.status(500).json({error: error.message})
+        res.status(500).json({error: error.message});
+    }
+}
+const eliminarProducto = async(req,res) =>{
+    try {
+        const {id} = req.params;
+        const producto = await eliminarProductoDB(id);
+        res.status(200).json(producto);
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
+const eliminarPublicacion = async(req,res) =>{
+    try {
+        const {id} = req.params;
+        const publicacion = await eliminarPublicacionDB(id);
+        res.status(200).json(publicacion);
+    } catch (error) {
+        res.status(500).json({error: error.message});
     }
 }
 module.exports = {
@@ -101,5 +119,7 @@ module.exports = {
     agregarProducto,
     agregarPublicacion,
     editarPublicacion,
-    editarProducto
+    editarProducto,
+    eliminarProducto,
+    eliminarPublicacion
 };

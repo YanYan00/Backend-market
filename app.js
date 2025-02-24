@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion, obtenerProducto,editarProducto,editarPublicacion} = require('./controllers/itemsControllers.js')
+const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion, obtenerProducto,editarProducto,editarPublicacion, eliminarProducto, eliminarPublicacion} = require('./controllers/itemsControllers.js')
 const express = require('express')
 const app = express()
 const cors = require('cors')

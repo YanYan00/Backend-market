@@ -78,6 +78,24 @@ const editarPublicacionDB = async (id,data) =>{
         throw error;
     }
 }
+const eliminarProductoDB = async(id) =>{
+    try {
+        const consulta = "DELETE FROM Productos WHERE idProducto = $1";
+        const result = await pool.query(consulta,[id]);
+        return result.rows[0];
+    } catch (error) {
+        throw error;
+    }
+}
+const eliminarPublicacionDB = async(id) =>{
+    try {
+        const consulta = "DELETE FROM Publicaciones WHERE idPublicacion = $1";
+        const result = await pool.query(consulta,[id]);
+        return result.rows[0];
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports ={
     obtenerProductosDB,
     obtenerPerfilDB,
@@ -87,5 +105,7 @@ module.exports ={
     agregarPublicacionDB,
     agregarProductoDB,
     editarProductoDB,
-    editarPublicacionDB
+    editarPublicacionDB,
+    eliminarProductoDB,
+    eliminarPublicacionDB
 };
