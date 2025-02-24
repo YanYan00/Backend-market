@@ -1,4 +1,4 @@
-const { obtenerProductosDB, obtenerPerfilDB, obtenerCategoriasDB,obtenerProductoDB , obtenerPublicacionesDB,agregarPublicacionDB,agregarProductoDB} = require("../models/itemsModels");
+const { obtenerProductosDB, obtenerPerfilDB, obtenerCategoriasDB,obtenerProductoDB , obtenerPublicacionesDB,agregarPublicacionDB,agregarProductoDB,editarProductoDB,editarPublicacionDB} = require("../models/itemsModels");
 
 const obtenerProductos = async (req, res) => {
     try {
@@ -72,7 +72,26 @@ const agregarPublicacion = async(req,res) =>{
         res.status(500).json({error: error.message});
     }
 }
-
+const editarProducto = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const productoData = req.body;
+        const producto = await editarProductoDB(id,productoData);
+        res.status(200).json(producto);
+    } catch (error) {
+        res.status(500).json({error:error.message});
+    }
+}
+const editarPublicacion = async(req,res) =>{
+    try {
+        const {id} = req.params;
+        const publicacionData = req.body;
+        const publicacion = await editarPublicacionDB(id,publicacionData);
+        res.status(200).json(publicacion);
+    } catch (error) {
+        res.status(500).json({error: error.message})
+    }
+}
 module.exports = {
     obtenerProductos,
     obtenerPerfil,
@@ -80,5 +99,7 @@ module.exports = {
     obtenerPublicaciones,
     obtenerProducto,
     agregarProducto,
-    agregarPublicacion
+    agregarPublicacion,
+    editarPublicacion,
+    editarProducto
 };

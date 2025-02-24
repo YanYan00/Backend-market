@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion, obtenerProducto} = require('./controllers/itemsControllers.js')
+const {obtenerProductos, obtenerPerfil, obtenerCategorias,obtenerPublicaciones,agregarProducto,agregarPublicacion, obtenerProducto,editarProducto,editarPublicacion} = require('./controllers/itemsControllers.js')
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -41,4 +41,16 @@ app.post('/api/posts',async(req,res)=>{
 })
 app.put('/api/profile/:id', async(req,res)=>{
     await actualizarPerfil(req,res);
+})
+app.put('/api/productos/:id',async(req,res)=>{
+    await editarProducto(req,res);
+})
+app.put('/api/posts/:id',async(req,res)=>{
+    await editarPublicacion(req,res);
+})
+app.delete('/api/productos/:id',async(req,res)=>{
+    await eliminarProducto(req,res);
+})
+app.delete('/api/posts/:id',async(req,res)=>{
+    await eliminarPublicacion(req,res);
 })
