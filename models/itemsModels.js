@@ -1,7 +1,7 @@
 const pool =require("../bd/server.js");
 
 const obtenerProductosDB = async () => {
-    const {rows} = await pool.query('SELECT  p.idProducto, p.descripcion, p.precio, p.stock, p.nombre,  p.fechaCrea, c.nombre AS categoria FROM  Productos p JOIN Categorias c ON p.idCategoria = c.idCategoria' );
+    const {rows} = await pool.query('SELECT  p.idProducto, p.descripcion, p.precio, p.stock, p.nombre,  p.fechaCrea, p.urlImagen, c.nombre AS categoria FROM  Productos p JOIN Categorias c ON p.idCategoria = c.idCategoria' );
     return rows;
 }
 const obtenerCategoriasDB = async () =>{
@@ -24,7 +24,7 @@ const obtenerProductoDB = async(id) =>{
 }
 const obtenerPublicacionesDB = async (id) => {
     try {
-        const consulta = "SELECT * FROM Publicaciones WHERE idUsuario = $1";
+        const consulta = "SELECT p.idPublicacion, p.titulo, p.descripcion, p.precio,p.fechaCrea, p.idUsuario, p.idCategoria, p.idProducto,pr.urlImagenFROM Publicaciones p JOIN Productos pr ON p.idProducto = pr.idProducto WHERE p.idUsuario = $1";
         const { rows } = await pool.query(consulta, [id]);
         return rows;
     } catch (error) {
@@ -33,9 +33,9 @@ const obtenerPublicacionesDB = async (id) => {
 }
 const agregarProductoDB = async (data) => {
     try {
-        const { nombre, descripcion, precio, stock, idCategoria } = data;
-        const consulta = 'INSERT INTO Productos (nombre, descripcion, precio, stock, idCategoria) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-        const values = [nombre, descripcion, precio, stock, idCategoria];
+        const { nombre, descripcion, precio, stock, idCategoria, urlImagen} = data;
+        const consulta = 'INSERT INTO Productos (nombre, descripcion, precio, stock, idCategoria, urlImagen) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+        const values = [nombre, descripcion, precio, stock, idCategoria,urlImagen];
         const result = await pool.query(consulta, values);
         return result.rows[0];
     } catch (error) {
@@ -58,9 +58,9 @@ const agregarPublicacionDB = async (data) => {
 }
 const editarProductoDB = async (id,data) =>{
     try {
-        const {nombre,descripcion,precio,stock,idCategoria} = data;
-        const consulta = "UPDATE Productos SET nombre=$1,descripcion=$2,precio=$3,stock=$4,idCategoria=$5 WHERE idProducto=$6 RETURNING *"
-        const values = [nombre,descripcion,precio,stock,idCategoria,id];
+        const {nombre,descripcion,precio,stock,idCategoria,urlImagen} = data;
+        const consulta = "UPDATE Productos SET nombre=$1,descripcion=$2,precio=$3,stock=$4,idCategoria=$5,urlImagen=$6 WHERE idProducto=$7 RETURNING *"
+        const values = [nombre,descripcion,precio,stock,idCategoria,urlImagen,id];
         const result = await pool.query(consulta,values);
         return result.rows[0];
     } catch (error) {

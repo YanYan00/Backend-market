@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const multer = require('multer');
 const verificarCredencialesMiddleware = (req, res, next) => {
     const { correo, password } = req.body;
     if (!correo || !password) {
@@ -10,6 +10,9 @@ const verificarCredencialesMiddleware = (req, res, next) => {
     }
     next();
 }
+const storage = multer.memoryStorage();
+const upload = multer({storage});
 module.exports ={
-    verificarCredencialesMiddleware
+    verificarCredencialesMiddleware,
+    upload
 }
