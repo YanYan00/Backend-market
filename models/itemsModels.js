@@ -24,7 +24,7 @@ const obtenerProductoDB = async(id) =>{
 }
 const obtenerPublicacionesDB = async (id) => {
     try {
-        const consulta = "SELECT p.idPublicacion, p.titulo, p.descripcion, p.precio,p.fechaCrea, p.idUsuario, p.idCategoria, p.idProducto,pr.urlImagenFROM Publicaciones p JOIN Productos pr ON p.idProducto = pr.idProducto WHERE p.idUsuario = $1";
+        const consulta = "SELECT p.idPublicacion, p.titulo, p.descripcion, p.precio,p.fechaCrea, p.idUsuario, p.idCategoria, p.idProducto,pr.urlImagen FROM Publicaciones p JOIN Productos pr ON p.idProducto = pr.idProducto WHERE p.idUsuario = $1";
         const { rows } = await pool.query(consulta, [id]);
         return rows;
     } catch (error) {
