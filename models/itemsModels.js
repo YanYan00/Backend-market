@@ -59,7 +59,7 @@ const agregarPublicacionDB = async (data) => {
 const editarProductoDB = async (id,data) =>{
     try {
         const {nombre,descripcion,precio,stock,idCategoria} = data;
-        const consulta = "UPDATE Productos SET nombre=$1,descripcion=$2,precio=$3,stock=$4,idCategoria=$5 WHERE idProductos=$6 RETURNING *"
+        const consulta = "UPDATE Productos SET nombre=$1,descripcion=$2,precio=$3,stock=$4,idCategoria=$5 WHERE idProducto=$6 RETURNING *"
         const values = [nombre,descripcion,precio,stock,idCategoria,id];
         const result = await pool.query(consulta,values);
         return result.rows[0];
