@@ -1,7 +1,7 @@
 const pool =require("../bd/server.js");
 
 const obtenerProductosDB = async () => {
-    const {rows} = await pool.query('SELECT  p.idProducto, p.descripcion, p.precio, p.stock, p.nombre,  p.fechaCrea, p.urlImagen, c.nombre AS categoria FROM  Productos p JOIN Categorias c ON p.idCategoria = c.idCategoria' );
+    const {rows} = await pool.query('SELECT p.idProducto, p.descripcion, p.precio, p.stock, p.nombre, p.fechaCrea, p.urlImagen, c.nombre AS categoria, pub.idUsuario AS idusuario FROM Productos p JOIN Categorias c ON p.idCategoria = c.idCategoria LEFT JOIN Publicaciones pub ON p.idProducto = pub.idProducto' );
     return rows;
 }
 const obtenerCategoriasDB = async () =>{
