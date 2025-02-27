@@ -9,7 +9,7 @@ const obtenerCategoriasDB = async () =>{
     return rows;
 }
 const obtenerPerfilDB = async (id) => {
-    const consulta = "SELECT nombre, correo FROM Usuarios WHERE idUsuario = $1"
+    const consulta = "SELECT nombre, correo,telefono,direccion FROM Usuarios WHERE idUsuario = $1"
     const { rows, rowCount } = await pool.query(consulta, [id]);
     return rows[0];
 }
