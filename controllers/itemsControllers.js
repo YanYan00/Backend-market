@@ -53,8 +53,6 @@ const obtenerPublicaciones = async (req, res) => {
 const agregarProducto = async(req, res) => {
     try {
         const productoData = req.body;
-        console.log('Datos recibidos:', productoData);
-        
         const producto = await agregarProductoDB(productoData);
         res.status(201).json(producto);
     } catch (error) {

@@ -4,7 +4,8 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const {login, register,actualizarPerfil} = require('./controllers/authController.js')
-const {verificarCredencialesMiddleware} = require('./middlewares/middlewares.js')
+const {verificarCredencialesMiddleware} = require('./middlewares/middlewares.js');
+const { agregarCarro } = require('./controllers/cartController.js');
 app.use(cors())
 app.use(express.json())
 const PORT = process.env.PORT || 3000;
@@ -38,6 +39,9 @@ app.post('/api/productos',async(req,res)=>{
 })
 app.post('/api/posts',async(req,res)=>{
     await agregarPublicacion(req,res);
+})
+app.post('/api/cart',async(req,res)=>{
+    await agregarCarro(req,res);
 })
 app.put('/api/profile/:id', async(req,res)=>{
     await actualizarPerfil(req,res);
