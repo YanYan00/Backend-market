@@ -8,7 +8,9 @@ CREATE TABLE Usuarios (
     nombre VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     fechaCrea DATE DEFAULT CURRENT_DATE,
-    correo VARCHAR(255) UNIQUE NOT NULL
+    correo VARCHAR(255) UNIQUE NOT NULL,
+    telefono VARCHAR(50),
+    direccion TEXT;
 );
 
 
@@ -30,7 +32,6 @@ CREATE TABLE Productos (
     FOREIGN KEY (idCategoria) REFERENCES Categorias(idCategoria) ON DELETE CASCADE
 );
 
-
 CREATE TABLE Publicaciones (
    idPublicacion SERIAL PRIMARY KEY,
    titulo VARCHAR(255) NOT NULL,
@@ -44,20 +45,37 @@ CREATE TABLE Publicaciones (
    FOREIGN KEY (idCategoria) REFERENCES Categorias(idCategoria) ON DELETE CASCADE,
    FOREIGN KEY (idProducto) REFERENCES Productos(idProducto) ON DELETE SET NULL
 );
-CREATE TABLE CategoriasPreferidas (
-    idPreferencia SERIAL PRIMARY KEY,
-    idUsuario INTEGER NOT NULL,
-    idCategoria INTEGER NOT NULL,
-    fechaAgregado DATE DEFAULT CURRENT_DATE,
-    FOREIGN KEY (idUsuario) REFERENCES Usuarios(idUsuario) ON DELETE CASCADE,
-    FOREIGN KEY (idCategoria) REFERENCES Categorias(idCategoria) ON DELETE CASCADE,
-    UNIQUE(idUsuario, idCategoria)
-);
-CREATE TABLE Carritos (
+CREATE TABLE Carrito (
     idCarrito SERIAL PRIMARY KEY,
-    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
-    idUsuario INTEGER NOT NULL UNIQUE,  -- Cada usuario tiene un solo carrito
+    idUsuario INTEGER NOT NULL,
     idProducto INTEGER NOT NULL,
+    cantidad INTEGER NOT NULL DEFAULT 1,
+    fechaAgregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idUsuario) REFERENCES Usuarios(idUsuario) ON DELETE CASCADE,
     FOREIGN KEY (idProducto) REFERENCES Productos(idProducto) ON DELETE CASCADE
+);
+
+CREATE TABLE Pedidos (
+    idPedido SERIAL PRIMARY KEY,
+    idUsuario INTEGER,
+    nombreComprador VARCHAR(255) NOT NULL,
+    emailComprador VARCHAR(255) NOT NULL,
+    telefonoComprador VARCHAR(50),
+    direccionComprador TEXT NOT NULL,
+    total NUMERIC(10,2) NOT NULL,
+    estado VARCHAR(50) DEFAULT 'Confirmado',
+    fechaPedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE DetallesPedido (
+    idDetalle SERIAL PRIMARY KEY,
+    idPedido INTEGER NOT NULL,
+    idProducto INTEGER NOT NULL,
+    idVendedor INTEGER NOT NULL,
+    cantidad INTEGER NOT NULL,
+    precio NUMERIC(10,2) NOT NULL,
+    estado VARCHAR(50) DEFAULT 'Confirmado',
+    FOREIGN KEY (idPedido) REFERENCES Pedidos(idPedido) ON DELETE CASCADE,
+    FOREIGN KEY (idProducto) REFERENCES Productos(idProducto) ON DELETE CASCADE,
+    FOREIGN KEY (idVendedor) REFERENCES Usuarios(idUsuario) ON DELETE CASCADE
 );

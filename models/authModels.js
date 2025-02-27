@@ -40,12 +40,12 @@ const verificarCorreoRegistro = async (email) =>{
     }
 }
 const registrarUsuarioBD = async (usuario) =>{
-    let {nombre,email, password } = usuario;
+    let {nombre,email, password,telefono,direccion } = usuario;
     await verificarCorreoRegistro(email);
     const passwordEncriptada = bcrypt.hashSync(password);
     const fechaCreacion = new Date().toISOString().split('T')[0];
-    const values = [nombre,passwordEncriptada,fechaCreacion,email];
-    const consulta = "INSERT INTO Usuarios VALUES (DEFAULT,$1,$2,$3,$4)";
+    const values = [nombre,passwordEncriptada,fechaCreacion,email,telefono,direccion];
+    const consulta = "INSERT INTO Usuarios VALUES (DEFAULT,$1,$2,$3,$4,$5,$6)";
     await pool.query(consulta,values);
 }
 
@@ -69,8 +69,8 @@ const verificarCorreoActualizacion = async (email,idUsuario) =>{
 const actualizarDatosBD = async(id,datos) => {
     try {
         await verificarCorreoActualizacion(datos.correo, id);
-        const consulta = "UPDATE Usuarios SET nombre=$1, correo=$2 WHERE idUsuario=$3 RETURNING *"
-        const values = [datos.nombre,datos.correo,id];
+        const consulta = "UPDATE Usuarios SET nombre=$1, correo=$2,telefono=$3,direccion=$4 WHERE idUsuario=$5 RETURNING *"
+        const values = [datos.nombre,datos.correo,datos.telefono,datos.direccion,id];
         const result = await pool.query(consulta,values);
         return result.rows[0];
     } catch (error) {
