@@ -17,7 +17,8 @@ const agregarCarroExistenteDB = async(id,producto)=>{
         const {cantidad} = producto;
         const consulta = 'UPDATE Carrito SET cantidad=$1 WHERE idCarrito=$2 RETURNING *'
         const values = [cantidad,id];
-        await pool.query(consulta,values);
+        const result = await pool.query(consulta,values);
+        return result.rows[0];
     } catch (error) {
         console.error('Error al agregar al carro',error);
         throw error;
