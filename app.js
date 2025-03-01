@@ -5,7 +5,7 @@ const app = express()
 const cors = require('cors')
 const {login, register,actualizarPerfil} = require('./controllers/authController.js')
 const {verificarCredencialesMiddleware} = require('./middlewares/middlewares.js');
-const { agregarCarro, agregarCarroExistente } = require('./controllers/cartController.js');
+const { agregarCarro, agregarCarroExistente, obtenerCarro, eliminarCarro, vaciarCarro } = require('./controllers/cartController.js');
 app.use(cors())
 app.use(express.json())
 const PORT = process.env.PORT || 3000;
@@ -25,9 +25,12 @@ app.get('/api/categorias',async(req,res)=>{
 app.get('/api/profile/:id', async (req,res) =>{
     await obtenerPerfil(req,res);
 })
-app.get('/api/posts/:id', async (req, res) => {
+app.get('/api/posts/:id', async (req,res) => {
     await obtenerPublicaciones(req, res);
 });
+app.get('/api/cart/:id', async (req,res)=>{
+    await obtenerCarro(req,res);
+})
 app.post('/api/login',verificarCredencialesMiddleware,async(req,res) =>{
     await login(req,res);
 });
@@ -60,4 +63,10 @@ app.delete('/api/productos/:id',async(req,res)=>{
 })
 app.delete('/api/posts/:id',async(req,res)=>{
     await eliminarPublicacion(req,res);
+})
+app.delete('/api/cart/item',async(req,res)=>{
+    await eliminarCarro(req,res);
+})
+app.delete('/api/cart/usuario/:idUsuario',async(req,res)=>{
+    await vaciarCarro(req,res);
 })
