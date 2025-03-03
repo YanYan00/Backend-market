@@ -68,40 +68,22 @@ const agregarPedidoDB = async(data) =>{
     try {
         let consulta;
         let values;
-        console.log("Validando estructura de datos...");
-        console.log("¿Tiene idComprador?", !!data.idComprador);
-        console.log("¿Tiene userInfo?", !!data.userInfo);
-        console.log("Datos de userInfo:", data.userInfo);
         if(data.idComprador){
-            console.log("Propiedades de userInfo:", Object.keys(data.userInfo));
-            console.log("Nombre:", data.userInfo.nombre);
-            console.log("Email:", data.userInfo.email);
-            consulta = 'INSERT INTO Pedidos (idusuario,nombreComprador,emailComprador,telefonoComprador,direccionComprador,total,estado) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *';
-            values = [data.idComprador,data.userInfo.nombre,data.userInfo.email,data.userInfo.telefono,data.userInfo.direccion,data.total,"Confirmado"];
+            consulta = 'INSERT INTO Pedidos (idusuario,nombreComprador,emailComprador,telefonoComprador,direccionComprador,total) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
+            values = [data.idComprador,data.userInfo.nombre,data.userInfo.email,data.userInfo.telefono,data.userInfo.direccion,data.total];
         }
         else{
-            console.log("Procesando como comprador invitado");
-            console.log("Datos de comprador:", data.comprador);
-            
             if (!data.comprador) {
                 throw new Error("Datos de comprador no proporcionados");
             }
-            consulta = 'INSERT INTO Pedidos (nombreComprador,emailComprador,telefonoComprador,direccionComprador,total,estado) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
-            values = [data.comprador.nombre,data.comprador.email,data.comprador.telefono,data.comprador.direccion,data.total,"Confirmado"];
+            consulta = 'INSERT INTO Pedidos (nombreComprador,emailComprador,telefonoComprador,direccionComprador,total) VALUES ($1,$2,$3,$4,$5) RETURNING *';
+            values = [data.comprador.nombre,data.comprador.email,data.comprador.telefono,data.comprador.direccion,data.total];
             
         } 
-        console.log("Consulta a ejecutar:", consulta);
-        console.log("Valores:", values);
-        
         const result = await pool.query(consulta, values);
         const idPedido = result.rows[0].idpedido;
-        
-        console.log("Pedido creado con ID:", idPedido);
-        console.log("Procesando items del pedido...");
-        console.log("Número de items:", data.items.length);
         for(const item of data.items){
             let idVendedor = item.idusuario;
-            console.log("Precio:",item.precio);
             await pool.query("INSERT INTO DetallesPedido (idPedido,idProducto,idVendedor,cantidad,precio,estado) VALUES ($1,$2,$3,$4,$5,$6)RETURNING *",
             [idPedido,item.idproducto,idVendedor,item.cantidad,item.precio,"Confirmado"])
         }
