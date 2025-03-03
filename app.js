@@ -46,6 +46,13 @@ app.post('/api/posts',async(req,res)=>{
 app.post('/api/cart',async(req,res)=>{
     await agregarCarro(req,res);
 })
+app.post('/api/pedidos', async (req, res) => {
+    await crearPedido(req, res);
+});
+
+app.post('/api/pedidos/invitado', async (req, res) => {
+    await crearPedido(req, res);
+});
 app.put('/api/profile/:id', async(req,res)=>{
     await actualizarPerfil(req,res);
 })

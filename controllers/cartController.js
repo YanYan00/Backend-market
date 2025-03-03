@@ -1,4 +1,4 @@
-const { agregarCarroDB, agregarCarroExistenteDB, obtenerCarroDB, eliminarCarroDB, vaciarCarroDB} = require("../models/cartModels");
+const { agregarCarroDB, obtenerCarroDB, eliminarCarroDB, vaciarCarroDB,agregarPedidoDB} = require("../models/cartModels");
 
 const obtenerCarro =async(req,res) =>{
     try {
@@ -37,9 +37,19 @@ const vaciarCarro = async (req,res) =>{
         res.status(500).json({error: error.message});
     }
 }
+const agregarPedido = async(req,res) =>{
+    try {
+        const data = req.body;
+        const result = await agregarPedidoDB(data);
+        res.status(201).json(result);    
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
 module.exports ={
     obtenerCarro,
     agregarCarro,
     eliminarCarro,
-    vaciarCarro
+    vaciarCarro,
+    agregarPedido,
 }

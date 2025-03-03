@@ -64,9 +64,38 @@ const vaciarCarroDB = async(idUsuario) =>{
         console.error('Error al vaciar el carrito:',error);
     }
 }
+const agregarPedidoDB = async(data) =>{
+    try {
+        let consulta;
+        let values;
+        if(data.idUsuario){
+            consulta = 'INSERT INTO Pedidos (idusuario,nombreComprador,emailComprador,telefonoComprador,direccionComprador,total,estado VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *';
+            values = [data.idComprador,data.userInfo.nombre,data.userInfo.email,data.userInfo.telefono,data.userInfo.direccion,data.total,"Confirmado"];
+        }
+        else{
+            consulta = 'INSERT INTO Pedidos (nombreComprador,emailComprador,telefonoComprador,direccionComprador,total,estado VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
+            values = [data.comprador.nombre,data.comprador.email,data.comprador.telefono,data.comprador.direccion,data.total,"Confirmado"];
+            
+        } 
+        const result = await pool.query(consulta,values);   
+        const idPedido = result.rows[0].idPedido;
+        for(const item of data.items){
+            let idVendedor = item.idUsuario;
+            await pool.query("INSERT INTO DetallesPedido (idPedido,idProducto,idVendedor,cantidad,precio,estado)) VALUES ($1,$2,$3,$4,$5,$6)RETURNING *",
+            [idPedido,item.idProducto,idVendedor,item.cantidad,item.precio,"Confirmado"])
+        }
+        return {idPedido,orden:`ORD-${idPedido}`,mensaje:"Pedido creado exitosamente"
+        }
+    } catch (error) {
+        console.error('Error al crear pedido en BD:', error);
+        throw error;
+    }
+    
+}
 module.exports ={
     obtenerCarroDB,
     agregarCarroDB,
     eliminarCarroDB,
-    vaciarCarroDB
+    vaciarCarroDB,
+    agregarPedidoDB
 }
