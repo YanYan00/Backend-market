@@ -101,6 +101,7 @@ const agregarPedidoDB = async(data) =>{
         console.log("Número de items:", data.items.length);
         for(const item of data.items){
             let idVendedor = item.idusuario;
+            console.log("Precio:",item.precio);
             await pool.query("INSERT INTO DetallesPedido (idPedido,idProducto,idVendedor,cantidad,precio,estado) VALUES ($1,$2,$3,$4,$5,$6)RETURNING *",
             [idPedido,item.idproducto,idVendedor,item.cantidad,item.precio,"Confirmado"])
         }
