@@ -64,6 +64,16 @@ const vaciarCarroDB = async(idUsuario) =>{
         console.error('Error al vaciar el carrito:',error);
     }
 }
+const actualizarStockProducto = async (idProducto, cantidad) =>{
+    try {
+        const consulta = 'UPDATE Productos SET stock = stock - $1 WHERE idProducto = $2 RETURNING *';
+        const result = await pool.query(consulta,[cantidad,idProducto]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error al actualizar stock:', error);
+        throw error;
+    }
+}
 const agregarPedidoDB = async(data) =>{
     try {
         let consulta;
@@ -85,7 +95,8 @@ const agregarPedidoDB = async(data) =>{
         for(const item of data.items){
             let idVendedor = item.idusuario;
             await pool.query("INSERT INTO DetallesPedido (idPedido,idProducto,idVendedor,cantidad,precio,estado) VALUES ($1,$2,$3,$4,$5,$6)RETURNING *",
-            [idPedido,item.idproducto,idVendedor,item.cantidad,item.precio,"Confirmado"])
+            [idPedido,item.idproducto,idVendedor,item.cantidad,item.precio,"Confirmado"]);
+            await actualizarStockProducto(item.idproducto,item.cantidad);
         }
         return {idPedido,orden:`ORD-${idPedido}`,mensaje:"Pedido creado exitosamente"
         }
