@@ -2,7 +2,7 @@ const pool = require('../bd/server.js');
 
 const obtenerPedidosDB = async(id)=>{
     try {
-        const consulta = 'SELECT d.iddetalle,d.idPedido,d.idProducto,d.cantidad,d.estado,d.precio, p.nombre,p.urlImagen,pe.nombreComprador,pe.direccionComprador FROM detallesPedido d JOIN Pedidos pe ON d.idPedido = pe.idPedido LEFT JOIN Productos p ON d.idProducto = p.idProducto WHERE d.idVendedor=$1';
+        const consulta = 'SELECT d.idDetalle,d.idPedido,d.idProducto,d.cantidad,d.estado,d.precio, p.nombre,p.urlImagen,pe.nombreComprador,pe.direccionComprador FROM detallesPedido d JOIN Pedidos pe ON d.idPedido = pe.idPedido LEFT JOIN Productos p ON d.idProducto = p.idProducto WHERE d.idVendedor=$1';
         const values = [id];
         const result = await pool.query(consulta,values);
         return result.rows;
