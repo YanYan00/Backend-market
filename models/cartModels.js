@@ -74,38 +74,66 @@ const actualizarStockProducto = async (idProducto, cantidad) =>{
         throw error;
     }
 }
-const agregarPedidoDB = async(data) =>{
+const agregarPedidoDB = async(data) => {
     try {
+        console.log("Datos recibidos para crear pedido:", JSON.stringify(data));
+        for (const item of data.items) {
+            console.log(`Verificando producto ID: ${item.idproducto}, tipo: ${typeof item.idproducto}`);
+            const idProducto = parseInt(item.idproducto);
+            const verificarProducto = 'SELECT idProducto FROM Productos WHERE idProducto = $1';
+            const resultadoVerificacion = await pool.query(verificarProducto, [idProducto]);
+            
+            if (resultadoVerificacion.rows.length === 0) {
+                console.error(`Producto no encontrado en la base de datos: ${idProducto}`);
+                throw new Error(`El producto con ID ${idProducto} no existe en la base de datos`);
+            }
+        }
         let consulta;
         let values;
-        if(data.idComprador){
-            consulta = 'INSERT INTO Pedidos (idusuario,nombreComprador,emailComprador,telefonoComprador,direccionComprador,total) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *';
-            values = [data.idComprador,data.userInfo.nombre,data.userInfo.email,data.userInfo.telefono,data.userInfo.direccion,data.total];
-        }
-        else{
+        
+        if (data.idComprador) {
+            consulta = 'INSERT INTO Pedidos (idusuario, nombreComprador, emailComprador, telefonoComprador, direccionComprador, total) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+            values = [data.idComprador, data.userInfo.nombre, data.userInfo.email, data.userInfo.telefono, data.userInfo.direccion, data.total];
+        } else {
             if (!data.comprador) {
                 throw new Error("Datos de comprador no proporcionados");
             }
-            consulta = 'INSERT INTO Pedidos (nombreComprador,emailComprador,telefonoComprador,direccionComprador,total) VALUES ($1,$2,$3,$4,$5) RETURNING *';
-            values = [data.comprador.nombre,data.comprador.email,data.comprador.telefono,data.comprador.direccion,data.total];
-            
-        } 
+            consulta = 'INSERT INTO Pedidos (nombreComprador, emailComprador, telefonoComprador, direccionComprador, total) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+            values = [data.comprador.nombre, data.comprador.email, data.comprador.telefono, data.comprador.direccion, data.total];
+        }
+        
         const result = await pool.query(consulta, values);
         const idPedido = result.rows[0].idpedido;
-        for(const item of data.items){
-            let idVendedor = item.idusuario;
-            await pool.query("INSERT INTO DetallesPedido (idPedido,idProducto,idVendedor,cantidad,precio,estado) VALUES ($1,$2,$3,$4,$5,$6)RETURNING *",
-            [idPedido,item.idproducto,idVendedor,item.cantidad,item.precio,"Confirmado"]);
-            await actualizarStockProducto(item.idproducto,item.cantidad);
+        for (const item of data.items) {
+            const idProducto = parseInt(item.idproducto);
+            const idVendedor = parseInt(item.idusuario);
+            const cantidad = parseInt(item.cantidad);
+            const precio = parseFloat(item.precio);
+            
+            try {
+                await pool.query(
+                    "INSERT INTO DetallesPedido (idPedido, idProducto, idVendedor, cantidad, precio, estado) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+                    [idPedido, idProducto, idVendedor, cantidad, precio, "Confirmado"]
+                );
+                await actualizarStockProducto(idProducto, cantidad);
+                
+                console.log(`Detalle insertado exitosamente: Producto ${idProducto}, Vendedor ${idVendedor}`);
+            } catch (detalleError) {
+                console.error(`Error al insertar detalle para producto ${idProducto}:`, detalleError);
+                throw detalleError;
+            }
         }
-        return {idPedido,orden:`ORD-${idPedido}`,mensaje:"Pedido creado exitosamente"
-        }
+        
+        return {
+            idPedido,
+            numeroOrden: `ORD-${idPedido}`,
+            mensaje: "Pedido creado exitosamente"
+        };
     } catch (error) {
-        console.error('Error al crear pedido en BD:', error);
+        console.error('Error detallado al crear pedido:', error);
         throw error;
     }
-    
-}
+};
 module.exports ={
     obtenerCarroDB,
     agregarCarroDB,

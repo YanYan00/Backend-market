@@ -10,7 +10,7 @@ CREATE TABLE Usuarios (
     fechaCrea DATE DEFAULT CURRENT_DATE,
     correo VARCHAR(255) UNIQUE NOT NULL,
     telefono VARCHAR(50),
-    direccion TEXT;
+    direccion TEXT
 );
 
 
@@ -22,13 +22,13 @@ CREATE TABLE Categorias (
 
 CREATE TABLE Productos (
     idProducto SERIAL PRIMARY KEY,
-    sku VARCHAR(255) UNIQUE NOT NULL,
     descripcion VARCHAR(255),
     precio INTEGER NOT NULL CHECK (precio >= 0),
     stock INTEGER NOT NULL CHECK (stock >= 0),
     nombre VARCHAR(255) NOT NULL,
     fechaCrea DATE DEFAULT CURRENT_DATE,
     idCategoria INTEGER NOT NULL,
+    urlImagen TEXT,
     FOREIGN KEY (idCategoria) REFERENCES Categorias(idCategoria) ON DELETE CASCADE
 );
 
