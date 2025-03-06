@@ -1,21 +1,24 @@
 const { obtenerPedidosDB, obtenerComprasDB, confirmarEnvioDB } = require("../models/ordersModels");
 
-const obtenerPedidos = async(req,res) =>{
+const obtenerPedidos = async(req,res) => {
     try {
         const {id} = req.params;
         const result = await obtenerPedidosDB(id);
-        res.json(result);
+        res.json(result.length > 0 ? result : []);
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({
+            error: error.message, 
+            data: []
+        });
     }
 }
-const obtenerCompras = async(req,res) =>{
+const obtenerCompras = async(req,res) => {
     try {
         const {id} = req.params;
         const result = await obtenerComprasDB(id);
-        res.json(result);
+        res.json(result.length > 0 ? result : []);
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({error: error.message, data: []});
     }
 }
 const confirmarEnvio = async(req,res) =>{
