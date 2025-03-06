@@ -1,7 +1,8 @@
+CREATE TABLE Categorias (
+    idCategoria SERIAL PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL UNIQUE
+);
 
-CREATE DATABASE tienda;
-
-\c tienda;
 
 CREATE TABLE Usuarios (
     idUsuario SERIAL PRIMARY KEY,
@@ -13,29 +14,22 @@ CREATE TABLE Usuarios (
     direccion TEXT
 );
 
-
-CREATE TABLE Categorias (
-    idCategoria SERIAL PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL UNIQUE
-);
-
-
 CREATE TABLE Productos (
     idProducto SERIAL PRIMARY KEY,
-    descripcion VARCHAR(255),
+    descripcion TEXT,
     precio INTEGER NOT NULL CHECK (precio >= 0),
     stock INTEGER NOT NULL CHECK (stock >= 0),
     nombre VARCHAR(255) NOT NULL,
     fechaCrea DATE DEFAULT CURRENT_DATE,
     idCategoria INTEGER NOT NULL,
-    urlImagen TEXT,
+	urlImagen TEXT,
     FOREIGN KEY (idCategoria) REFERENCES Categorias(idCategoria) ON DELETE CASCADE
 );
 
 CREATE TABLE Publicaciones (
    idPublicacion SERIAL PRIMARY KEY,
    titulo VARCHAR(255) NOT NULL,
-   descripcion VARCHAR(255),
+   descripcion TEXT,
    precio INTEGER NOT NULL CHECK (precio >= 0),
    fechaCrea DATE DEFAULT CURRENT_DATE,
    idUsuario INTEGER NOT NULL,
@@ -50,7 +44,6 @@ CREATE TABLE Carrito (
     idUsuario INTEGER NOT NULL,
     idProducto INTEGER NOT NULL,
     cantidad INTEGER NOT NULL DEFAULT 1,
-    fechaAgregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idUsuario) REFERENCES Usuarios(idUsuario) ON DELETE CASCADE,
     FOREIGN KEY (idProducto) REFERENCES Productos(idProducto) ON DELETE CASCADE
 );
